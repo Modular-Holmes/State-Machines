@@ -9,7 +9,6 @@ public class Main {
         State state3 = new State("3");
 
         StateMachine machine = new StateMachine("Machine");
-        
 
         machine.register(new Transition(state1, state2));
         machine.register(new Transition(state2, state3, ()-> true ,() -> false));

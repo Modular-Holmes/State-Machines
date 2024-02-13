@@ -20,7 +20,9 @@ public class State {
      * Called upon entry to the state
      */
     public void runState(){
-        this.action.run();
+        if(action != null){
+            this.action.run();
+        }
     }
 
     public Runnable getAction() {
