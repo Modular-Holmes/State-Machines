@@ -16,6 +16,11 @@ public class Transition {
         SUCCEEDED
     }
     
+    /**
+     * Creates a new Transition, no Force or Blocker
+     * @param start Start State
+     * @param end End State
+     */
     public Transition(State start, State end){
         this.start = start;
         this.end = end;
@@ -53,6 +58,11 @@ public class Transition {
         this.blocker = blocker;
     }
 
+    /**
+     * Updates a Transition, Forcing if unblocked
+     * @param current Current State
+     * @return TransitionStatus.FORCED if the transition should be forced, TransitionStatus.BLOCKED if Blocker is active, TransitionStatus.AVAILABLE if in correct start State and Unblocked, TransitionStatus.UNAVAILABLE if incorrect start State
+     */
     public TransitionStatus update(State current){
         if(current.equals(start)){
             if(force.getAsBoolean() && !blocker.getAsBoolean()){
@@ -68,7 +78,13 @@ public class Transition {
         }
     }
 
-    public TransitionStatus attempt(){
+    /**
+     * Checks if a Transition is usable
+     * @return TransitionStatus.BLOCKED if unusable, TransitionStatus.SUCCEEDED if able, TransitionStatus.UNAVAILABLE if incorrect start State
+     */
+    public TransitionStatus attempt(State current){
+        if(current != this.getStart()){return TransitionStatus.UNAVAILABLE;}
+
         if(blocker.getAsBoolean()){
             return TransitionStatus.BLOCKED;
         } else {

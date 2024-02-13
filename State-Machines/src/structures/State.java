@@ -15,6 +15,10 @@ public class State {
         this.action = action;
     }
 
+    /**
+     * Runs the State's Runnable
+     * Called upon entry to the state
+     */
     public void runState(){
         this.action.run();
     }
