@@ -13,6 +13,7 @@ public class Transition {
         AVAILABLE,
         UNAVAILABLE,
         BLOCKED,
+        SUCCEEDED
     }
     
     public Transition(State start, State end){
@@ -23,6 +24,12 @@ public class Transition {
         blocker = () -> false;
     }
 
+    /**
+     * Create a new Transition, with a blocker condition
+     * @param start Start State
+     * @param end End State
+     * @param blocker A boolean supplier that returns true when the transition is blocked
+     */
     public Transition(State start, State end, BooleanSupplier blocker){
         this.start = start;
         this.end = end;
@@ -31,6 +38,13 @@ public class Transition {
         this.blocker = blocker;
     }
 
+    /**
+     * Create a new Transition, with force and blocker conditions
+     * @param start Start State
+     * @param end End State
+     * @param force A boolean supplier that returns true when the transition is blocked
+     * @param blocker A boolean supplier that returns true when the transition is forced
+     */
     public Transition(State start, State end, BooleanSupplier force, BooleanSupplier blocker){
         this.start = start;
         this.end = end;
@@ -51,6 +65,14 @@ public class Transition {
 
         } else{
             return TransitionStatus.UNAVAILABLE;
+        }
+    }
+
+    public TransitionStatus attempt(){
+        if(blocker.getAsBoolean()){
+            return TransitionStatus.BLOCKED;
+        } else {
+            return TransitionStatus.SUCCEEDED;
         }
     }
 

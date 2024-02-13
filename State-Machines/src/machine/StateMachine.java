@@ -24,18 +24,22 @@ public class StateMachine {
 
     public StateMachine(String machineName){
         this.machineName = machineName;
+
+        this.machine = new HashMap<String, State>();
+        this.transitions = new ArrayList<Transition>();
     }
 
     public boolean register(Transition transition){
         this.transitions.add(transition);
-        return machine.put(transition.getStart().getName(), transition.getStart()) != null 
+        
+        return machine.put("transition.getStart().getName()", transition.getStart()) != null 
             || machine.put(transition.getEnd().getName(), transition.getEnd()) != null;
     }
 
     public void updateAllTransitions(){
         for(Transition transition : transitions){
             if (transition.update(current) == TransitionStatus.FORCED){
-                current = transition.getEnd();
+                completeTransition(transition, TransitionStatus.FORCED);
                 break;
             }
         }
@@ -55,10 +59,20 @@ public class StateMachine {
         if(paths.size() == 0){return MachineResponse.NOPATH;}
 
         for(Transition t : paths){
-            if(t.attempt() == TransitionStatus.SUCCEEDED){return MachineResponse.SUCCESSFUL;}
+            if(t.attempt() == TransitionStatus.SUCCEEDED){
+                completeTransition(t, TransitionStatus.SUCCEEDED);
+                return MachineResponse.SUCCESSFUL;
+            }
         }
 
         return MachineResponse.BLOCKED;
+    }
+
+    public void completeTransition(Transition t, TransitionStatus status){
+        System.out.println("Transition: " + t.toString() + " " + status);
+        this.current = t.getEnd();
+
+        this.updateAllTransitions();
     }
 
     public void setCurrentState(State current){

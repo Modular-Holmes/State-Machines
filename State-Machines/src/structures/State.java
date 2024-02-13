@@ -32,7 +32,8 @@ public class State {
     }
 
     public boolean equals(State other){
-        return this.getName() == other.getName();
+        return this.getName()
+         == other.getName();
     }
 
     public String toString(){
